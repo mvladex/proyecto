@@ -1,0 +1,119 @@
+{% extends 'esqueleto.html' %}
+
+{% block content %}
+
+<div class="main-content">
+
+
+                    <div class="container-fluid">
+                        <div class="row">
+                           <div class="col-md-12">
+                             <br>
+                               <br>
+                           </div>
+                        </div>
+
+                        <div class="row justify-content-center align-items-center">
+
+                            <div class="col-md-7">
+                                <div class="card">
+                                    <div class="card-header">
+
+                                          <strong>
+                                              <h4>Datos del usuario</h4>
+                                          </strong>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mx-auto d-block">
+                                            <center><img class="img-thumbnail " src="/static/fotos/{{ usuario_busqueda.ruta }}.jpg" alt="Card image cap" ></center>
+                                            <h3 class="text-sm-center mt-2 mb-1">{{ usuario_busqueda.nombre +" "+ usuario_busqueda.apellido_paterno+" "+usuario_busqueda.apellido_materno}}</h3>
+                                            <div class="location text-sm-center">
+                                                <i class="fa fa-map-marker"></i> {{ usuario_busqueda.direccion}}
+                                            </div>
+                                            <div class="location text-sm-center">
+                                                <i class="fa fa-phone"></i> {{ usuario_busqueda.telefono}}
+                                            </div>
+
+                                            <div class="location text-sm-center">
+                                                <i class="fa fa-address-book"></i> {{ usuario_busqueda.correo}}
+                                            </div>
+
+                                        </div>
+                                        <hr>
+
+                                        <h4 class="text-center">Proceso de Inscripción</h4><br>
+                                        <!-- form start-->
+                                         <form action="/credencial" method="post">
+
+                                            <input type="hidden" name="idusuario" value="{{ usuario_busqueda.id }}">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label for="cc-exp" class="control-label mb-1">Inscripción</label>
+                                                        <input type="decimal" name="inscripcion" class="form-control" value="{{precios[0].valor}}" readonly>
+
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label for="x_card_code" class="control-label mb-1">Colegiatura</label>
+                                                    <select name="taller" class="form-control">
+                                                        {% set contador=namespace(value=1) %}
+                                                        {% for datos in taller %}
+
+                                                            <option value="{{ contador.value }}">{{ datos.nombre+"  $%.2f"|format(datos.costo)  }}</option>
+                                                            {% set contador.value= contador.value + 1 %}
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                              <div class="form-group">
+                                                <label for="cc-number" class="control-label mb-1">Horario de Entrenamiento</label>
+                                                <select name="horario" class="form-control">
+                                                    <option value="1">07:00am</option>
+                                                    <option value="2">08:00am</option>
+                                                    <option value="3">09:00am</option>
+                                                    <option value="4">10:00am</option>
+                                                    <option value="5">11:00am</option>
+                                                    <option value="6">12:00pm</option>
+                                                    <option value="7">01:00pm</option>
+                                                    <option value="8">02:00pm</option>
+                                                    <option value="9">03:00pm</option>
+                                                    <option value="10">04:00pm</option>
+                                                    <option value="11">05:00pm</option>
+                                                    <option value="12">06:00pm</option>
+                                                    <option value="13">07:00pm</option>
+                                                    <option value="14">08:00pm</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <button id="payment-button"  class="btn btn-lg btn-info btn-block">
+                                                    <i class="fa fa-save fa-lg"></i>&nbsp;
+                                                    <span id="payment-button">Registrar</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                        <!-- form end-->
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                        </div>
+                    </div>
+
+            </div>
+
+{% endblock %}

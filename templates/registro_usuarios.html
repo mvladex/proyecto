@@ -1,0 +1,322 @@
+{% extends 'esqueleto.html' %}
+
+{% block codigo %}
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.js"></script>
+
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+           <div class="col-md-12">
+              <div class="overview-wrap">
+                <h2 class="title-1">Registro de usuarios</h2>
+              </div>
+           </div>
+        </div>
+
+        <div class="row m-t-25">
+            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">Box & Crossfit</div>
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <h3 class="text-center title-2">Persona</h3>
+                                        </div>
+                                        <hr>
+                                        <form  onsubmit="return validarDatos() " method="post" enctype="multipart/form-data" id="myForm">
+
+                                            <div class="row">
+
+                                                <div class="col-xs-12 col-sm-8">
+                                                    <div class="form-group">
+                                                        <label for="cc-payment" class="control-label mb-1">Nombre</label>
+                                                        <input id="nombre" name="nombre" type="text" class="form-control" aria-required="true" aria-invalid="false" placeholder="Escribir nombre de la persona" required>
+                                                    </div>
+
+                                               <div class="row">
+                                                <div class="col-xs-12 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label  class="control-label mb-1">Apellido Paterno</label>
+                                                        <input  id="apellido_paterno" name="apellido_paterno" type="text" class="form-control cc-exp"  placeholder="Escribir apellido paterno" required>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-12 col-sm-6">
+                                                    <label for="x_card_code" class="control-label mb-1">Apellido Materno</label>
+                                                    <div class="input-group">
+                                                        <input  id="apellido_materno" name="apellido_materno" type="text" class="form-control cc-cvc" placeholder="Escribir apellido materno" required>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group has-success">
+                                                <label  class="control-label mb-1">Dirección</label>
+                                                <input  id="direccion" name="direccion" type="text" class="form-control cc-name valid" required placeholder="Escribir dirección">
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="cc-number" class="control-label mb-1">Teléfono</label>
+                                                <input  id="telefono" pattern="[0-9]{3}[0-9]{2}[0-9]{5}" name="telefono" type="tel" maxlength="10" class="form-control cc-number identified visa" required placeholder="Escribir  teléfono">
+
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="cc-number" class="control-label mb-1">Correo electronico</label>
+                                                <input  id="correo"  name="correo" type="email"  class="form-control" required placeholder="Escribir correo">
+
+                                            </div>
+
+
+                                                </div><!-- columna 1 -->
+
+                                                <div class="col-xs-12 col-sm-4">
+                                                       <div class="card">
+                                                          <div class="card-header">
+                                                            Fotografía
+                                                          </div>
+                                                          <div class="card-body text-center">
+
+                                                               <video id="video" width="300" height="200" autoplay></video>
+                                                               <canvas id="canvas" class="canvas-wrapper"></canvas>
+                                                               <!-- ini-->
+                                                                 <b id="camera"></b>
+                                                                <!--FOR THE SNAPSHOT-->
+
+                                                                <h1 id="snapShot" ></h1>
+                                                                <input class="btn btn-danger" type="button" value="Tomar fotografía" onclick="tomarFoto()">
+                                                                  <!-- fin-->
+                                                              <br>
+                                                              <style>
+                                                                    /*Hide canvas*/
+                                                                    #canvas {
+                                                                        display: none !important;
+                                                                    }
+                                                                </style>
+
+                                                              <br>
+                                                              <div class="alert alert-danger" role="alert" id="mensaje_foto">
+                                                                      Favor de capturar la imagen
+                                                                    </div>
+                                                                <img id="canvasimg" src="" />
+                                                          </div>
+
+                                                       </div>
+                                                </div> <!-- columna 2-->
+
+                                            </div>
+
+                                             <div>
+                                                <button id="payment-button" type="submit" class="btn btn-lg btn-info btn-block">
+                                                    <i class="fa fa-save fa-lg"></i>&nbsp;
+                                                    <span id="payment-button-amount">Registrar</span>
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+ </div>
+        </div>
+
+
+    </div>
+
+
+
+
+{% endblock %}
+
+{% block pie %}
+     <script>
+     var imagen_enviar
+         document.getElementById("mensaje_foto").style.display='none'
+
+var video = document.getElementById('video');
+// getUserMedia()Get camera footage with
+var media = navigator.mediaDevices.getUserMedia({ video: true });
+//Pour into video tags for real-time playback (streaming)
+media.then((stream) => {
+    video.srcObject = stream;
+});
+
+var canvas = document.getElementById('canvas');
+canvas.setAttribute('width', video.width);
+canvas.setAttribute('height', video.height);
+
+video.addEventListener(
+    'timeupdate',
+    function () {
+        var context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, video.width, video.height);
+    },
+    true
+);
+
+function tomarFoto()
+{
+            context = canvas.getContext('2d');
+            document.getElementById("mensaje_foto").style.display = 'none'
+            //Remove the head of the acquired base64 data
+            var img_base64 = canvas.toDataURL('image/jpeg').replace(/^.*,/, '')
+            imagen_enviar=img_base64;
+
+            $("#canvasimg").attr("src", $("#canvas").get(0).toDataURL("img/png"));
+
+}
+
+
+function upload()
+{
+
+            context = canvas.getContext('2d');
+            document.getElementById("mensaje_foto").style.display = 'none'
+            //Remove the head of the acquired base64 data
+            var img_base64 = canvas.toDataURL('image/jpeg').replace(/^.*,/, '')
+            var aux = img_base64
+
+            $("#canvasimg").attr("src", $("#canvas").get(0).toDataURL("img/png"));
+
+
+            nombre = document.getElementById('nombre').value;
+            apellido_paterno = document.getElementById('apellido_paterno').value;
+            apellido_materno = document.getElementById('apellido_materno').value;
+            direccion = document.getElementById('direccion').value;
+            telefono = document.getElementById('telefono').value;
+            correo= document.getElementById('correo').value;
+
+        //    captureImg(img_base64, nombre, apellido_paterno, apellido_materno, direccion, telefono);
+
+}
+
+
+
+
+var xhr = new XMLHttpRequest();
+
+//Captured image data(base64)POST
+function captureImg(img_base64,nombre,a_p,a_m,direccion,telefono,correo) {
+    const body = new FormData();
+    body.append('nombre',nombre);
+    body.append('apellido_paterno',a_p);
+    body.append('apellido_materno',a_m);
+    body.append('direccion',direccion);
+    body.append('telefono',telefono);
+    body.append('correo',correo);
+    body.append('img', img_base64);
+    xhr.open('POST', 'capture_img', true);
+    xhr.onload = () => {
+        console.log(xhr.responseText)
+    };
+    xhr.send(body);
+}
+
+
+function validarDatos()
+{
+    var todo_correcto = true;
+    if(document.getElementById('nombre').value.length < 4 ) {
+        todo_correcto = false;
+    }
+     if(document.getElementById('apellido_paterno').value.length < 4 ) {
+        todo_correcto = false;
+    }
+      if(document.getElementById('apellido_materno').value.length < 4 ) {
+        todo_correcto = false;
+    }
+       if(document.getElementById('direccion').value.length < 4 ) {
+        todo_correcto = false;
+    }
+
+
+        if(document.getElementById("canvasimg").src.length < 100 ) {
+        document.getElementById("mensaje_foto").style.display='inline'
+        todo_correcto = false;
+
+    }
+
+
+
+    return todo_correcto;
+
+
+}
+const form = document.querySelector('#myForm');
+
+
+
+form.addEventListener('submit', (event) => {
+
+
+
+    if(validarDatos())
+    {
+        event.preventDefault();
+
+    // configure a request
+            nombre = document.getElementById('nombre').value;
+            apellido_paterno = document.getElementById('apellido_paterno').value;
+            apellido_materno = document.getElementById('apellido_materno').value;
+            direccion = document.getElementById('direccion').value;
+            telefono = document.getElementById('telefono').value;
+            correo = document.getElementById('correo').value;
+
+    const xhr = new XMLHttpRequest();
+    const data = new FormData(form);
+    data.append('nombre',nombre);
+    data.append('apellido_paterno',apellido_paterno);
+    data.append('apellido_materno',apellido_materno);
+    data.append('direccion',direccion);
+    data.append('telefono',telefono);
+    data.append('correo',correo);
+    data.append('img', imagen_enviar);
+  //  xhr.open('POST', '/capture_img');
+
+
+    xhr.open('POST', 'capture_img', true);
+    xhr.onload = () => {
+       // console.log(xhr.responseText)
+    };
+    xhr.send(data);
+
+
+
+    clean()
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) {
+            var OK = 200;
+            if (xhr.status === OK) {
+
+                window.location.href = xhr.responseText;
+            }
+            else {
+                console.log ('Error: ' + xhr.status);
+            }
+        }
+    };
+
+    }
+
+
+
+    // disable default action
+
+});
+
+
+
+function clean()
+{
+    document.getElementById("canvasimg").removeAttribute('src')
+    document.getElementById("nombre").value=""
+     document.getElementById("apellido_materno").value=""
+     document.getElementById("apellido_paterno").value=""
+     document.getElementById("direccion").value=""
+     document.getElementById("telefono").value=""
+    document.getElementById("correo").value=""
+}
+
+</script>
+{% endblock %}

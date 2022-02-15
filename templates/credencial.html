@@ -1,0 +1,83 @@
+{% extends 'esqueleto.html' %}
+
+{% block busqueda %}
+
+     <div class="page-container">
+            <!-- HEADER DESKTOP-->
+            <header class="">
+                <div class="section__content--p30">
+                        <br>
+                        <div class="row justify-content-center align-items-center">
+                            <form class="form-header" action="" method="POST">
+                                <input class="au-input au-input--xl" type="text" name="search" placeholder="Buscar un usuario" />
+                                <button class="au-btn--submit" type="submit">
+                                    <i class="zmdi zmdi-search"></i>
+                                </button>
+                            </form>
+
+                        </div>
+
+
+                </div>
+            </header>
+
+
+     </div>
+{%  endblock %}
+
+{% block content %}
+<hr>
+<div class="main-content">
+<div class="container-fluid">
+    <div class="row">
+         <div class="col-md-4">
+
+             {% if usuario_busqueda %}
+                 <div class="card" >
+                                    <div class="card-header">
+                                        <img src="/static/images/logo.png" class="text-right">
+                                        <strong class="card-title mb-3">{{ usuario_busqueda.nombre +" "+usuario_busqueda.apellido_paterno+" "+usuario_busqueda.apellido_materno }}</strong>
+
+                                    </div>
+                                    <div class="card-body" >
+                                        <div class="mx-auto d-block">
+                                            <div class="row">
+                                                    <div class="col-md-6">
+                                                        <img  src="/static/codigosqr/{{ usuario_sistema }}.png" alt="imagen qr">
+
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <br>
+                                                        <img class="card-img-top" src="/static/fotos/{{ usuario_busqueda.ruta }}.jpg" alt="perfi" >
+                                                    </div>
+                                            </div>
+
+                                            <div class="location text-sm-center">
+                                                <i class="fa fa-map-marker"></i> {{ usuario_busqueda.direccion }}
+                                            </div>
+                                            <div class="location text-sm-center">
+                                                <i class="fa fa-phone"></i> {{ usuario_busqueda.telefono }}
+                                            </div>
+                                            <div class="location text-sm-center">
+                                                <i class="fa fa-address-book"></i> {{ usuario_busqueda.correo }}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="card-text text-sm-center">
+                                            <a href="{{ url_for('principal.getpdf',idbusqueda=usuario_busqueda.id) }}" class="btn btn-success" target="_blank">Generar Credencial</a>
+                                        </div>
+                                    </div>
+                                </div>
+             {% endif %}
+
+
+         </div>
+
+
+
+    </div>
+
+</div>
+</div>
+
+{% endblock %}
