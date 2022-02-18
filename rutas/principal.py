@@ -17,6 +17,7 @@ from utils.generar_usuario import GenerarUsuario
 
 import qrcode
 
+#inician las vistas
 
 principal=Blueprint('principal',__name__)
 
@@ -144,7 +145,8 @@ def capture_img():
         db.session.add(usuario_nuevo)
         db.session.commit()
         id_max=db.session.query(func.max(Usuario.id)).scalar()
-        msg = service.save_img(request.form["img"],ruta_imagen)
+        alta = service()
+        alta.save_img(request.form["img"], ruta_imagen)
         return url_for('principal.get_perfil',id=id_max,usuario_nuevo=usuario_nuevo)
 
 
